@@ -1,8 +1,23 @@
 <template>
   <div class="main">
+    
+<Transition @before-enter="bgSunHandle"
+  @enter="bgSunHandle"
+  @after-enter="bgSunHandle"
+  @enter-cancelled="bgSunHandle"
+  @before-leave="bgSunHandle"
+  @leave="bgSunHandle"
+  @after-leave="bgSunHandle"
+  @leave-cancelled="bgSunHandle">
+    <div v-show="show">123123</div> 
+    </Transition>
+    <button @click="()=>{show=!show}">Toggle</button>
     <div  class="bg_sun">
       <div class="sun"></div>
       <div class="bg_cloud"></div>
+    </div>
+    
+    <div style="height:100vh">
     </div>
     <div class="bubble">
       <span></span>
@@ -49,6 +64,10 @@
 
 <script>
 import VueMixin from "../VueMixin/vuemixin";
+import { reactive, toRefs } from "vue";
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 
 export default {
   name: "H5_Summer",
@@ -56,6 +75,56 @@ export default {
     // const { _H5Adaptation } = VueMixin(); //解构
     // _H5Adaptation(); //rem   root fontSize 适配设计稿 750
 
+    const state = reactive({
+      show:false
+    })
+
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const bgSunHandle = ()=>{
+      console.log("执行了东西");
+    }
+
+    const onBeforeEnter = (el)=> {console.log("执行了东西");}
+
+  // 在元素被插入到 DOM 之后的下一帧被调用
+  // 用这个来开始进入动画
+  const onEnter = (el, done)=>{
+    // 调用回调函数 done 表示过渡结束
+    // 如果与 CSS 结合使用，则这个回调是可选参数console.log("执行了东西");
+    done();
+    console.log("执行了东西");
+  }
+
+// 当进入过渡完成时调用。
+const onAfterEnter = (el)=> {console.log("执行了东西");}
+const onEnterCancelled = (el)=> {console.log("执行了东西");}
+
+// 在 leave 钩子之前调用
+// 大多数时候，你应该只会用到 leave 钩子
+const onBeforeLeave = (el)=> {console.log("执行了东西");}
+
+// 在离开过渡开始时调用
+// 用这个来开始离开动画
+const onLeave=(el, done)=> {
+  // 调用回调函数 done 表示过渡结束
+  // 如果与 CSS 结合使用，则这个回调是可选参数
+  done();
+  console.log("执行了东西");
+}
+
+// 在离开过渡完成、
+// 且元素已从 DOM 中移除时调用
+const onAfterLeave = (el)=> {console.log("执行了东西");}
+
+// 仅在 v-show 过渡中可用
+const onLeaveCancelled = (el)=> {console.log("执行了东西");}
+    
+    return {
+      ...toRefs(state),
+      bgSunHandle,
+      onLeaveCancelled,onAfterLeave,onLeave,onBeforeLeave,onEnterCancelled,onAfterEnter,onEnter,onBeforeEnter
+    }
   },
 };
 </script>
@@ -85,6 +154,16 @@ export default {
   height: 100%;
   background-size: 100% 48%;
   background-position: 0px 100px;
+  animation: animatesun 8s ease-in-out infinite;
+}
+@keyframes animatesun {
+   0%,
+   100% {
+      transform: translateX(-20px);
+   }
+   50% {
+      transform: translateX(20px);
+   }
 }
 .bubble {
    position: fixed;
