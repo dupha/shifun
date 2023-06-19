@@ -1,26 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <H5SUMMER/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import H5SUMMER from './components/H5_Summer.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    H5SUMMER
+  },
+  setup() {
+    const info = [
+      { name: "时间", fileExtension: "2023/06/19" },
+      { name: "作者", fileExtension: "dupha" },
+      { name: "框架", fileExtension: "vue" },
+      { name: "框架版本", fileExtension: "3.2.13" },
+    ];
+
+    console.table(info);
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
