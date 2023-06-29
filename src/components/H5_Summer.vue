@@ -1,23 +1,15 @@
 <template>
   <div class="main">
-    
-<Transition @before-enter="bgSunHandle"
-  @enter="bgSunHandle"
-  @after-enter="bgSunHandle"
-  @enter-cancelled="bgSunHandle"
-  @before-leave="bgSunHandle"
-  @leave="bgSunHandle"
-  @after-leave="bgSunHandle"
-  @leave-cancelled="bgSunHandle">
-    <div v-show="show">123123</div> 
-    </Transition>
-    <button @click="()=>{show=!show}">Toggle</button>
     <div  class="bg_sun">
       <div class="sun"></div>
       <div class="bg_cloud"></div>
     </div>
     
-    <div style="height:100vh">
+    <div style="height:40vh">
+      <div class="move_animation">
+         <div class="move_mouse"> </div>
+         <p class="move_text">下滑进入清凉之旅~</p>
+      </div>
     </div>
     <div class="bubble">
       <span></span>
@@ -59,12 +51,21 @@
       <span></span>
       <span></span>
     </div>
+
+    <div class="part1">
+      <div class="search_block">
+         <div class="search_bg"></div>
+      </div>
+      <div class="qingliang_summer">
+         <div id="qingliang_1" class="qingliang_summer_title"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import VueMixin from "../VueMixin/vuemixin";
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs,onMounted } from "vue";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -72,58 +73,43 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 export default {
   name: "H5_Summer",
   setup() {
-    // const { _H5Adaptation } = VueMixin(); //解构
-    // _H5Adaptation(); //rem   root fontSize 适配设计稿 750
+    const { _H5Adaptation } = VueMixin(); //解构
+    _H5Adaptation(); //rem   root fontSize 适配设计稿 750
 
     const state = reactive({
       show:false
     })
 
+    let speed = 100;
+
     gsap.registerPlugin(ScrollTrigger);
+
+   //   let scene1 = gsap.timeline();
+   //    ScrollTrigger.create({
+   //       animation: scene1,
+   //       trigger: ".qingliang_summer",
+   //       start: "top top",
+   //       end: "45% 100%",
+   //       scrub: 3,
+   //    });
+
+   //  // hills animation 
+   //  scene1.to("#qingliang_1", { y: 3 * speed, x: 1 * speed, scale: 0.9, ease: "power1.in" }, 0)
     
-    const bgSunHandle = ()=>{
-      console.log("执行了东西");
-    }
+   onMounted(()=>{
+      gsap.from(".qingliang_summer",{
+         scrollTrigger:{
+            trigger:'.qingliang_summer',
+            toggleActions: 'restart pause reverse none'
+         },
+         y:400,
+         rotation:360,
+         duration:3
+      });
+   })
 
-    const onBeforeEnter = (el)=> {console.log("执行了东西");}
-
-  // 在元素被插入到 DOM 之后的下一帧被调用
-  // 用这个来开始进入动画
-  const onEnter = (el, done)=>{
-    // 调用回调函数 done 表示过渡结束
-    // 如果与 CSS 结合使用，则这个回调是可选参数console.log("执行了东西");
-    done();
-    console.log("执行了东西");
-  }
-
-// 当进入过渡完成时调用。
-const onAfterEnter = (el)=> {console.log("执行了东西");}
-const onEnterCancelled = (el)=> {console.log("执行了东西");}
-
-// 在 leave 钩子之前调用
-// 大多数时候，你应该只会用到 leave 钩子
-const onBeforeLeave = (el)=> {console.log("执行了东西");}
-
-// 在离开过渡开始时调用
-// 用这个来开始离开动画
-const onLeave=(el, done)=> {
-  // 调用回调函数 done 表示过渡结束
-  // 如果与 CSS 结合使用，则这个回调是可选参数
-  done();
-  console.log("执行了东西");
-}
-
-// 在离开过渡完成、
-// 且元素已从 DOM 中移除时调用
-const onAfterLeave = (el)=> {console.log("执行了东西");}
-
-// 仅在 v-show 过渡中可用
-const onLeaveCancelled = (el)=> {console.log("执行了东西");}
-    
     return {
       ...toRefs(state),
-      bgSunHandle,
-      onLeaveCancelled,onAfterLeave,onLeave,onBeforeLeave,onEnterCancelled,onAfterEnter,onEnter,onBeforeEnter
     }
   },
 };
@@ -136,6 +122,7 @@ const onLeaveCancelled = (el)=> {console.log("执行了东西");}
   width:100vw;
 }
 .bg_sun{
+  overflow: hidden;
   background-image: linear-gradient(#f5fcff 0%, #459ad3 40%, #3d9edf 70%, #61CCFF 92%);
   width:100vw;
   height:60vh;
@@ -156,6 +143,20 @@ const onLeaveCancelled = (el)=> {console.log("执行了东西");}
   background-position: 0px 100px;
   animation: animatesun 8s ease-in-out infinite;
 }
+.move_mouse{
+  background:url(../assets/static/moveMouse.png) no-repeat center; 
+  background-size: 100%;
+  height:0.6rem;
+  width:0.6rem;
+  margin: 0 auto;
+}
+.move_text{
+    line-height: 0.5rem;
+    text-align: center;
+    margin: 0.3rem;
+    font-size: 0.32rem;
+    color: #1296db;
+}
 @keyframes animatesun {
    0%,
    100% {
@@ -166,7 +167,7 @@ const onLeaveCancelled = (el)=> {console.log("执行了东西");}
    }
 }
 .bubble {
-   position: fixed;
+   position: absolute;
    width: 100px;
    height: 100px;
    top:300px;
@@ -177,7 +178,7 @@ const onLeaveCancelled = (el)=> {console.log("执行了东西");}
    animation: animate 8s ease-in-out infinite;
 }
 .bubble1 {
-   position: fixed;
+   position: absolute;
    width: 50px;
    height: 50px;
    top:400px;
@@ -185,6 +186,9 @@ const onLeaveCancelled = (el)=> {console.log("执行了东西");}
    box-shadow: inset 0 0 25px rgba(255, 255, 255, .3);
    filter: blur(1px);
    animation: animate1 8s ease-in-out infinite;
+}
+.move_animation{
+   animation: animate2 4s ease-in-out infinite;
 }
 .movebig1{
   top:500px;
@@ -216,6 +220,15 @@ const onLeaveCancelled = (el)=> {console.log("执行了东西");}
    }
    50% {
       transform: translateY(20px) translateX(20px);
+   }
+}
+@keyframes animate2 {
+   0%,
+   100% {
+      transform: translateY(-20px);
+   }
+   50% {
+      transform: translateY(20px);
    }
 }
 .bubble span {
@@ -332,5 +345,34 @@ const onLeaveCancelled = (el)=> {console.log("执行了东西");}
    background-color: rgba(255, 255, 255, .9);
    filter: blur(1px);
    z-index: 10;
+}
+
+.part1{
+   width:100vw;
+   height:100vh;
+}
+.search_block{
+   width:100vw;
+   height:1.5rem;
+   padding-top:0.8rem;
+}
+.search_bg{
+   background:url(../assets/static/title.png) no-repeat center; 
+   width: 4.7rem;
+   height: 1.09rem;
+   background-size: 100%;
+   margin: 0 auto;
+}
+.qingliang_summer{
+   width:100vw;
+   height:3rem;
+   margin-top:0.8rem;
+}
+.qingliang_summer_title{
+   background:url(../assets/static/qingliang_summer_title.png) no-repeat center; 
+   width: 6.7rem;
+   height: 2.68rem;
+   background-size: 100%;
+   margin: 0 auto;
 }
 </style>
