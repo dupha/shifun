@@ -1,4 +1,6 @@
-# h5_summer
+# 释Fun_团建
+
+![释Fun_团建]( ./src/assets/static/pc.jpg)
 
 ## Project setup
 ```
