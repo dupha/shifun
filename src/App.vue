@@ -12,7 +12,7 @@ export default {
     const router = useRouter();
 
     const info = [
-      { name: "时间", fileExtension: "2023/06/30" },
+      { name: "时间", fileExtension: "2023/07/03" },
       { name: "作者", fileExtension: "dupha" },
       { name: "框架", fileExtension: "vue" },
       { name: "框架版本", fileExtension: "3.2.13" },

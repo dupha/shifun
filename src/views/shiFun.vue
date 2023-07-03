@@ -12,7 +12,7 @@
           v-for="item in menuArray"
           :key="item.index"
           ><div
-            @click="mainHeardHandle(item.index)"
+            @click="clickMenuHandle(item)"
             :class="
               activeMenu == item.index
                 ? 'main_heard_active flex-center pointer'
@@ -26,11 +26,11 @@
       </el-row>
     </div>
     <div class="container">
-      <div class="affix"></div>
-      <div class="container_img1">
+      <div class="affix" @click="dialogHandle"></div>
+      <div id="section0" class="container_img1">
         <div class="container_img2"></div>
       </div>
-      <div class="container_img3">
+      <div id="section1" class="container_img3">
         <div class="container_img4"></div>
         <div class="container_img5">
           <Map
@@ -45,12 +45,18 @@
           另：上海周边至江浙沪范围内也有超过二十个合作场地，根据您的具体需求，供您选择！
         </p>
       </div>
-      <div class="container_img6">
+      <div class="container_section2">
+        <div id="section2" class="container_img6 container_panel">
+        </div>
+        <div class="container_img7 container_panel">
+        </div>
+        <div class="container_img8 container_panel">
+        </div>
       </div>
-      <div class="container_img7">
-      </div>
-      <div class="container_img8">
-      </div>
+    </div>
+    <div id="section3" class="container_footer">
+    </div>
+    <div  id="section4" class="footer1">
     </div>
   </div>
 </template>
@@ -61,6 +67,7 @@ import { reactive, toRefs, onMounted } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Map from "../components/map.vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
   name: "shi_fun",
@@ -78,26 +85,32 @@ export default {
         {
           index: 1,
           name: "品牌介绍",
+          section:'section0', //锚点定位
         },
         {
           index: 2,
           name: "场地选择",
+          section:'section1',
         },
         {
           index: 3,
           name: "项目多样化",
+          section:'section2',
         },
         {
           index: 4,
           name: "服务保障",
+          section:'section3',
         },
         {
           index: 5,
           name: "精彩瞬间",
+          section:'section4',
         },
         {
           index: 6,
           name: "方案定制",
+          section:'',
         },
       ],
       handleMouse: [
@@ -191,15 +204,44 @@ export default {
       state.handleMouse[Number - 1].flag = true;
     };
 
-    onMounted(() => {
-      gsap.from(".qingliang_summer", {
-        scrollTrigger: {
-          trigger: ".qingliang_summer",
-          toggleActions: "restart pause reverse none",
+    //锚点跳转  vue和<a>标签冲突使用此方法解决
+    const goAnchor = (selector)=>{
+      document.querySelector(selector).scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+    const clickMenuHandle = (item)=>{
+      mainHeardHandle(item.index);
+      if(!!item.section){
+        goAnchor('#'+item.section);
+      }else{
+        //定制方案弹窗
+        dialogHandle();
+      }
+    }
+
+    const dialogHandle = ()=>{
+      ElMessageBox.alert('PC端还没完善，请用手机端打开该网页', '提醒', {
+        // if you want to disable its autofocus
+        // autofocus: false,
+        confirmButtonText: 'OK',
+        callback: (action) => {
         },
-        y: 400,
-        rotation: 360,
-        duration: 3,
+      })
+    }
+
+    onMounted(() => {
+      let sections = gsap.utils.toArray(".container_panel");
+      gsap.to(sections, {
+        xPercent: -100 * (sections.length - 1),
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".container_section2",
+          pin: true,
+          scrub: 1,
+          snap: 1 / (sections.length - 1),
+          end: "+=3500",
+        }
       });
     });
 
@@ -207,6 +249,9 @@ export default {
       ...toRefs(state),
       mainHeardHandle,
       handleMouseOver,
+      clickMenuHandle,
+      goAnchor,
+      dialogHandle,
     };
   },
 };
@@ -271,13 +316,14 @@ export default {
   position: fixed;
   bottom: 20%;
   right: 0;
+  background-size: 100%;
   z-index:9;
 }
 .container_img1 {
   background: url(../assets/static/Rectangle 71.png) no-repeat center;
   width: 19.2rem;
-  height: 7.91rem;
-  background-size: 100%;
+  height: calc(100vh - 1rem);
+  background-size: 100% 100%;
 }
 .container_img2 {
   background: url(../assets/static/Group 65.png) no-repeat center;
@@ -317,21 +363,21 @@ export default {
 .container_img6 {
   background: url(../assets/static/Group 66.png) no-repeat center;
   width: 19.2rem;
-  height: 11.27rem;
+  height: 100vh;
   background-size: 100%;
   position: relative;
 }
 .container_img7 {
   background: url(../assets/static/Group 67.png) no-repeat center;
   width: 19.2rem;
-  height: 11.27rem;
+  height: 100vh;
   background-size: 100%;
   position: relative;
 }
 .container_img8 {
   background: url(../assets/static/Group 68.png) no-repeat center;
   width: 19.2rem;
-  height: 11.27rem;
+  height: 100vh;
   background-size: 100%;
   position: relative;
 }
@@ -404,5 +450,31 @@ export default {
   position: absolute;
   top: 7.1rem;
   left: 2.4rem;
+}
+.container_footer{
+  background: url(../assets/static/Group 69.png) no-repeat center;
+  width: 19.2rem;
+  height: 18rem;
+  background-size: 100%;
+  position: relative;
+}
+.footer1{
+  background: url(../assets/static/footer1.png) no-repeat center;
+  width: 19.2rem;
+  height: 2.56rem;
+  background-size: 100%;
+  position: relative;
+}
+a {  
+  text-decoration: none; /* 去除下划线 */  
+  color: inherit; /* 继承父元素文本颜色 */  
+  cursor: pointer; /* 将鼠标指针改为手指形状，以表示可点击 */  
+}
+.container_section2{
+  overscroll-behavior: none;
+  width: 300%;
+  height: 100vh;
+  display: flex;
+  flex-wrap: nowrap;
 }
 </style>
