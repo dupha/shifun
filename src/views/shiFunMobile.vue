@@ -1,11 +1,15 @@
 <template>
   <div class="main">
-    <div class="main_heard">
+    <div id="main_heard" class="main_heard">
       <el-row :gutter="24" style="margin: 0 !important">
         <el-col :span="2"></el-col>
         <el-col :span="8" class="flex-center"><div class="logo"></div></el-col>
         <el-col :span="6"></el-col>
-        <el-col :span="6" class="flex-center"><el-button round>全部服务</el-button></el-col>
+        <el-col :span="6" class="flex-center"
+          ><el-button round @click="openDrawerHandle"
+            >全部服务</el-button
+          ></el-col
+        >
         <el-col :span="2"></el-col>
       </el-row>
     </div>
@@ -29,31 +33,84 @@
         </p>
       </div>
       <div class="">
-        <div id="section2" class="container_img6 container_panel">
-        </div>
-        <div class="container_img7 container_panel">
-        </div>
-        <div class="container_img8 container_panel">
-        </div>
+        <div id="section2" class="container_img6 container_panel"></div>
+        <div class="container_img7 container_panel"></div>
+        <div class="container_img8 container_panel"></div>
       </div>
     </div>
     <div id="section3" class="container_footer1">
       <div class="section3_banner">
-      <el-carousel :interval="2000" height="2.08rem" arrow="always">
-        <el-carousel-item v-for="item in 2" :key="item">
-          <div :class="'section3_banner_img'+item">
-          </div>
-        </el-carousel-item>
-      </el-carousel>
+        <el-carousel :interval="2000" height="2.08rem" arrow="always">
+          <el-carousel-item v-for="item in 2" :key="item">
+            <div :class="'section3_banner_img' + item"></div>
+          </el-carousel-item>
+        </el-carousel>
       </div>
     </div>
-    <div id="section4" class="container_footer2">
-    </div>
-    <div  id="section5" class="footer1">
+    <div id="section4" class="container_footer2"></div>
+    <div id="section5" class="footer1"></div>
+
+    <div class="affix flex-center">
+      <el-button
+        type="primary"
+        @click="clickMenuHandle({ section: 'main_heard' })"
+        plain
+        >返回顶部</el-button
+      >
+      <el-button @click="dialogHandle" type="primary" style="width: 2rem"
+        >方案定制</el-button
+      >
     </div>
 
-    <div class="affix">
-    </div>
+    <el-drawer v-model="drawer" size="80%" title="">
+      <div class="menu_box">
+        <div
+          v-for="item in menuArray"
+          :key="item.index"
+          @click="clickMenuHandle(item)"
+          class="menu_text"
+        >
+          {{ item.name }}
+        </div>
+      </div>
+    </el-drawer>
+    <el-drawer v-model="drawerForm" direction="ltr" size="100%" title="方案定制">
+      <el-form :model="form" label-width="1.2rem">
+        <el-form-item label="团建人数">
+          <el-select v-model="form.num" placeholder="请选择团建人数">
+            <el-option label="20人以下" value="20人以下" />
+            <el-option label="21-50人" value="21-50人" />
+            <el-option label="51-70人" value="51-70人" />
+            <el-option label="71-100人" value="71-100人" />
+            <el-option label="100人以上" value="100人以上" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="人均预算">
+          <el-select v-model="form.budget" placeholder="请选择人均预算">
+            <el-option label="200-299元" value="200-299元" />
+            <el-option label="300-499元" value="300-499元" />
+            <el-option label="500-699元" value="500-699元" />
+            <el-option label="700-999元" value="700-999元" />
+            <el-option label="1000元以上" value="1000元以上" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="团建天数">
+          <el-select v-model="form.days" placeholder="请选择团建天数">
+            <el-option label="半日" value="半日" />
+            <el-option label="一日" value="一日" />
+            <el-option label="二-三日" value="二-三日" />
+            <el-option label="三日以上" value="三日以上" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="联系人">
+          <el-input v-model="form.contactName" placeholder="请填写联系人"/>
+        </el-form-item>
+        <el-form-item label="联系电话">
+          <el-input v-model="form.contactPhone" placeholder="请填写联系电话"/>
+        </el-form-item>
+      </el-form>
+      <div class="flex-center"><el-button type="primary" @click="submitForm">提交团建信息</el-button></div>
+    </el-drawer>
   </div>
 </template>
 
@@ -63,7 +120,8 @@ import { reactive, toRefs, onMounted } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Map from "../components/map.vue";
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
+import axios from 'axios'
 
 export default {
   name: "shi_fun",
@@ -76,37 +134,39 @@ export default {
 
     const state = reactive({
       show: false,
+      drawer: false,
+      drawerForm: false,
       activeMenu: 1,
       menuArray: [
         {
           index: 1,
           name: "品牌介绍",
-          section:'section0', //锚点定位
+          section: "section0", //锚点定位
         },
         {
           index: 2,
           name: "场地选择",
-          section:'section1',
+          section: "section1",
         },
         {
           index: 3,
           name: "项目多样化",
-          section:'section2',
+          section: "section2",
         },
         {
           index: 4,
           name: "服务保障",
-          section:'section3',
+          section: "section3",
         },
         {
           index: 5,
           name: "精彩瞬间",
-          section:'section4',
+          section: "section4",
         },
         {
           index: 6,
           name: "方案定制",
-          section:'',
+          section: "",
         },
       ],
       handleMouse: [
@@ -171,23 +231,18 @@ export default {
           name: "山阳农庄",
         },
       ],
+      form:{
+        num:"",
+        budget:"",
+        days:"",
+        contactName:"",
+        contactPhone:""
+      }
     });
 
     let speed = 100;
 
     gsap.registerPlugin(ScrollTrigger);
-
-    //   let scene1 = gsap.timeline();
-    //    ScrollTrigger.create({
-    //       animation: scene1,
-    //       trigger: ".qingliang_summer",
-    //       start: "top top",
-    //       end: "45% 100%",
-    //       scrub: 3,
-    //    });
-
-    //  // hills animation
-    //  scene1.to("#qingliang_1", { y: 3 * speed, x: 1 * speed, scale: 0.9, ease: "power1.in" }, 0)
 
     const mainHeardHandle = (item) => {
       state.activeMenu = item;
@@ -201,43 +256,101 @@ export default {
     };
 
     //锚点跳转  vue和<a>标签冲突使用此方法解决
-    const goAnchor = (selector)=>{
+    const goAnchor = (selector) => {
       document.querySelector(selector).scrollIntoView({
-        behavior: "smooth"
+        behavior: "smooth",
       });
-    }
-    const clickMenuHandle = (item)=>{
+    };
+    const clickMenuHandle = (item) => {
+      //抽屉字段设置为false
+      state.drawer = false;
+
       mainHeardHandle(item.index);
-      if(!!item.section){
-        goAnchor('#'+item.section);
-      }else{
+      if (!!item.section) {
+        goAnchor("#" + item.section);
+      } else {
         //定制方案弹窗
         dialogHandle();
       }
+    };
+
+    const dialogHandle = () => {
+      state.drawerForm = true;
+    };
+    // 正则表达式用于匹配手机号码  
+    const isValidPhoneNumber = (phoneNumber)=>{  
+        var regex = /^[1-9]\d{9,11}$/;  
+        return regex.test(phoneNumber);  
+    }
+    const isValidObject= (obj)=>{  
+      for (let prop in obj) {  
+          if(obj[prop].trim().length == 0){
+            return false;
+          }
+      }  
+      return true;  
     }
 
-    const dialogHandle = ()=>{
-      ElMessageBox.alert('PC端还没完善，请用手机端打开该网页', '提醒', {
-        // if you want to disable its autofocus
-        // autofocus: false,
-        confirmButtonText: 'OK',
-        callback: (action) => {
-        },
+    const submitForm = ()=>{
+      if(!isValidObject(state.form)){
+        ElMessage({
+              message: '信息不完善.',
+              type: 'error',
+            })
+        return ;
+      }
+      if(!isValidPhoneNumber(state.form.contactPhone)){
+            ElMessage({
+              message: '手机信息不完善.',
+              type: 'error',
+            })
+        return ;
+      }
+
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        background: 'rgba(0, 0, 0, 0.7)',
       })
+      axios.post("/api/record", state.form).then(response => {
+        if(response.data.code){
+          ElMessage({
+            message: '提交成功!',
+            type: 'success',
+          })
+        }else{
+          ElMessage({
+            message: '提交失败.',
+            type: 'warning',
+          })
+        }
+        loading.close()
+      }).catch(err=>{
+        console.error(err);
+        loading.close();
+        ElMessage({
+          message: '提交失败.',
+          type: 'warning',
+        })
+      });
     }
+
+    const openDrawerHandle = () => {
+      state.drawer = true;
+    };
 
     onMounted(() => {
       let scene1 = gsap.timeline();
-      gsap.utils.toArray(".container_panel").forEach((panel,i)=>{
+      gsap.utils.toArray(".container_panel").forEach((panel, i) => {
         ScrollTrigger.create({
-            animation: scene1,
-            trigger: panel,
-            start: "top top",
-            end: "+=300",
-            pin: true,
-            pinSpacing:false,
+          animation: scene1,
+          trigger: panel,
+          start: "top top",
+          end: "+=300",
+          pin: true,
+          pinSpacing: false,
         });
-      })
+      });
     });
 
     return {
@@ -247,12 +360,12 @@ export default {
       clickMenuHandle,
       goAnchor,
       dialogHandle,
+      openDrawerHandle,
+      submitForm
     };
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .main {
   height: 100vh;
@@ -304,7 +417,7 @@ export default {
 .pointer {
   cursor: pointer;
 }
-.container{
+.container {
   overflow-x: hidden;
 }
 .container_img1 {
@@ -327,7 +440,7 @@ export default {
   width: 10.66rem;
   height: 5.43rem;
   background-size: 100%;
-  
+
   position: relative;
 }
 .container_img4 {
@@ -379,7 +492,7 @@ export default {
   bottom: 0.2rem;
   width: 3.11rem;
   text-align: center;
-  left: calc(100vw/2);
+  left: calc(100vw / 2);
   transform: translateX(-50%);
 }
 .map_1 {
@@ -442,33 +555,33 @@ export default {
   top: 7.1rem;
   left: 2.4rem;
 }
-.container_footer1{
+.container_footer1 {
   background: url(../assets/static/Group 74.png) no-repeat center;
   width: 3.75rem;
   height: 3.8rem;
   background-size: 100%;
   position: relative;
 }
-.container_footer2{
+.container_footer2 {
   background: url(../assets/static/Group 75.png) no-repeat center;
   width: 3.75rem;
   height: 3.8rem;
   background-size: 100%;
   position: relative;
 }
-.footer1{
+.footer1 {
   background: url(../assets/static/Group 76.png) no-repeat center;
   width: 3.75rem;
   height: 2.21rem;
   background-size: 100%;
   position: relative;
 }
-a {  
-  text-decoration: none; /* 去除下划线 */  
-  color: inherit; /* 继承父元素文本颜色 */  
-  cursor: pointer; /* 将鼠标指针改为手指形状，以表示可点击 */  
+a {
+  text-decoration: none; /* 去除下划线 */
+  color: inherit; /* 继承父元素文本颜色 */
+  cursor: pointer; /* 将鼠标指针改为手指形状，以表示可点击 */
 }
-.container_section2{
+.container_section2 {
   overscroll-behavior: none;
   width: 300%;
   height: 3.31rem;
@@ -476,26 +589,26 @@ a {
   flex-wrap: nowrap;
 }
 
-.content_text{  
-  overflow: hidden; /* 隐藏超出宽度的内容 */  
-  text-overflow: ellipsis; /* 在超出宽度时显示省略号以指示被截断的内容 */  
+.content_text {
+  overflow: hidden; /* 隐藏超出宽度的内容 */
+  text-overflow: ellipsis; /* 在超出宽度时显示省略号以指示被截断的内容 */
 }
-.section3_banner{
-  width:3.75rem;
-  height:2.08rem;
-  background:white;
+.section3_banner {
+  width: 3.75rem;
+  height: 2.08rem;
+  background: white;
   position: absolute;
   top: 1.4rem;
 }
-.section3_banner_img1{
-  width:3.75rem;
-  height:2.08rem;
+.section3_banner_img1 {
+  width: 3.75rem;
+  height: 2.08rem;
   background: url(../assets/static/Group 81.png) no-repeat center;
   background-size: 100%;
 }
-.section3_banner_img2{
-  width:3.75rem;
-  height:2.08rem;
+.section3_banner_img2 {
+  width: 3.75rem;
+  height: 2.08rem;
   background: url(../assets/static/Group 82.png) no-repeat center;
   background-size: 100%;
 }
@@ -505,7 +618,21 @@ a {
   position: fixed;
   bottom: 0;
   right: 0;
-  background:white;
-  z-index:9;
+  background: white;
+  z-index: 9;
+}
+.menu_box{
+  display: flex;
+  height: 60vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.menu_text {
+  font-size: 0.2rem;
+  line-height: 0.48rem;
+  weight: 500;
+}
+/deep/ .el-drawer__title{
+  font-size: 0.26rem !important;
 }
 </style>
