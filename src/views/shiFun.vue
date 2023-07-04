@@ -15,8 +15,8 @@
             @click="clickMenuHandle(item)"
             :class="
               activeMenu == item.index
-                ? 'main_heard_active flex-center pointer'
-                : 'pointer'
+                ? 'main_heard_active flex-center content_text pointer'
+                : 'content_text pointer'
             "
           >
             {{ item.name }}
