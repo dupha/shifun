@@ -312,7 +312,7 @@ export default {
         text: 'Loading',
         background: 'rgba(0, 0, 0, 0.7)',
       })
-      axios.post("/api/record", state.form).then(response => {
+      axios.post("/api/tuanjian/shifun/teamBuilding/record", state.form).then(response => {
         if(response.data.code){
           ElMessage({
             message: '提交成功!',

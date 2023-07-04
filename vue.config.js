@@ -3,18 +3,15 @@ module.exports = defineConfig({
   // 关闭eslint语法验证
   lintOnSave: false,
   transpileDependencies: true,
+  publicPath: process.env.NODE_ENV === 'production' ? '/shifun/' : '/',
   devServer: {
-    open: true,
-    host: 'localhost',
-    port: 8080,
-    https: false,
-    //以上的ip和端口是我们本机的;下面为需要跨域的
     proxy: { //配置跨域
       '/api': {
-          target: 'https://flashcash4test.com/tuanjian/shifun/teamBuilding', //填写请求的目标地址
+          target: 'https://flashcash4test.com', //填写请求的目标地址
+          secure: false,
           changOrigin: true, //允许跨域
-          pathRewrite: {
-            '^/api': '' //请求的时候使用这个api就可以
+          pathRewrite : {                  //重写路径
+              '^/api' : ''                 //把 /api 变为空字符
           }
         }
       }
