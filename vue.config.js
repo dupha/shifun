@@ -5,7 +5,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   publicPath: process.env.NODE_ENV === 'production' ? '/shifun/' : '/',
   devServer: {
-    proxy: { //配置跨域
+    proxy: { //配置跨域  baseurl在 utils/request.js中修改‘/api’
       '/api': {
           target: 'https://flashcash4test.com', //填写请求的目标地址
           secure: false,

@@ -121,7 +121,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Map from "../components/map.vue";
 import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
-import axios from 'axios'
+import request from "../utils/request.js";
 
 export default {
   name: "shi_fun",
@@ -312,7 +312,7 @@ export default {
         text: 'Loading',
         background: 'rgba(0, 0, 0, 0.7)',
       })
-      axios.post("/api/tuanjian/shifun/teamBuilding/record", state.form).then(response => {
+      request.post("/tuanjian/shifun/teamBuilding/record", state.form).then(response => {
         if(response.data.code){
           ElMessage({
             message: '提交成功!',
