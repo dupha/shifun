@@ -350,7 +350,6 @@ export default {
           trigger: panel,
           start: "top "+scrollTop+'px',
           end: "+=300",
-          markers:true,
           pin: true,
           pinSpacing: false,
         });
