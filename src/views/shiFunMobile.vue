@@ -20,12 +20,9 @@
       <div id="section1_1" class="container_img3">
         <div class="container_img4"></div>
         <div class="container_img5">
-          <Map
-            :class="'map_' + item.index"
-            v-for="item in handleMouse"
-            v-on:mouseover="handleMouseOver(item.index)"
-            :flag="item.flag"
-            :title="item.name"
+          <MobileMap
+            :MapArray="handleMouse"
+            @handleMouseOver="handleMouseOver"
           />
         </div>
         <p class="container_p1">
@@ -59,9 +56,10 @@
         type="primary"
         @click="clickMenuHandle({ section: 'main_heard' })"
         plain
+        style="height: 0.4rem;font-size: 0.18rem;"
         >返回顶部</el-button
       >
-      <el-button @click="dialogHandle" type="primary" style="width: 2rem"
+      <el-button @click="dialogHandle" type="primary" style="width: 2rem;height: 0.4rem;font-size: 0.18rem;"
         >方案定制</el-button
       >
     </div>
@@ -123,14 +121,14 @@ import VueMixin from "../VueMixin/vuemixin";
 import { reactive, toRefs, onMounted } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Map from "../components/map.vue";
+import MobileMap from "../components/MobileMap.vue";
 import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
 import request from "../utils/request.js";
 
 export default {
   name: "shi_fun",
   components: {
-    Map,
+    MobileMap,
   },
   setup() {
     const { _H5Adaptation } = VueMixin(); //解构
@@ -505,66 +503,6 @@ export default {
   text-align: center;
   left: calc(100vw / 2);
   transform: translateX(-50%);
-}
-.map_1 {
-  position: absolute;
-  top: 2.6rem;
-  left: 1.68rem;
-}
-.map_2 {
-  position: absolute;
-  top: 0.3rem;
-  left: 3rem;
-}
-.map_3 {
-  position: absolute;
-  top: 1.4rem;
-  left: 4.6rem;
-}
-.map_4 {
-  position: absolute;
-  top: 2.15rem;
-  left: 4rem;
-}
-.map_5 {
-  position: absolute;
-  top: 2.3rem;
-  left: 4.6rem;
-}
-.map_6 {
-  position: absolute;
-  top: 2.2rem;
-  left: 2.5rem;
-}
-.map_7 {
-  position: absolute;
-  top: 3.9rem;
-  left: 1.4rem;
-}
-.map_8 {
-  position: absolute;
-  top: 5.5rem;
-  left: 2rem;
-}
-.map_9 {
-  position: absolute;
-  top: 5.2rem;
-  left: 5rem;
-}
-.map_10 {
-  position: absolute;
-  top: 5.7rem;
-  left: 5.7rem;
-}
-.map_11 {
-  position: absolute;
-  top: 6.3rem;
-  left: 3.2rem;
-}
-.map_12 {
-  position: absolute;
-  top: 7.1rem;
-  left: 2.4rem;
 }
 .container_footer1 {
   background: url(../assets/static/Group 74.png) no-repeat center;
