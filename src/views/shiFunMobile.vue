@@ -2,22 +2,22 @@
   <div class="main">
     <div id="main_heard" class="main_heard">
       <el-row :gutter="24" style="margin: 0 !important">
-        <el-col :span="2"></el-col>
         <el-col :span="8" class="flex-center"><div class="logo"></div></el-col>
-        <el-col :span="6"></el-col>
-        <el-col :span="6" class="flex-center"
+        <el-col :span="8"></el-col>
+        <el-col :span="8" class="flex-center"
           ><el-button round @click="openDrawerHandle"
             >全部服务</el-button
           ></el-col
         >
-        <el-col :span="2"></el-col>
       </el-row>
     </div>
     <div class="container">
-      <div id="section0" class="container_img1">
+      <a id="section0" style="display:block;height:0.48rem;margin-top:-0.48rem;"></a>
+      <div id="section0_0" class="container_img1">
         <div class="container_img2"></div>
       </div>
-      <div id="section1" class="container_img3">
+      <a id="section1" style="display:block;height:0.48rem;margin-top:-0.48rem;"></a>
+      <div id="section1_1" class="container_img3">
         <div class="container_img4"></div>
         <div class="container_img5">
           <Map
@@ -33,12 +33,14 @@
         </p>
       </div>
       <div class="">
-        <div id="section2" class="container_img6 container_panel"></div>
+        <a id="section2" style="display:block;height:0.48rem;margin-top:-0.48rem;"></a>
+        <div id="section2_2" class="container_img6 container_panel"></div>
         <div class="container_img7 container_panel"></div>
         <div class="container_img8 container_panel"></div>
       </div>
     </div>
-    <div id="section3" class="container_footer1">
+    <a id="section3" style="display:block;height:0.48rem;margin-top:-0.48rem;"></a>
+    <div id="section3_3" class="container_footer1">
       <div class="section3_banner">
         <el-carousel :interval="2000" height="2.08rem" arrow="always">
           <el-carousel-item v-for="item in 2" :key="item">
@@ -47,8 +49,10 @@
         </el-carousel>
       </div>
     </div>
-    <div id="section4" class="container_footer2"></div>
-    <div id="section5" class="footer1"></div>
+    <a id="section4" style="display:block;height:0.48rem;margin-top:-0.48rem;"></a>
+    <div id="section4_4" class="container_footer2"></div>
+    <a id="section5" style="display:block;height:0.48rem;margin-top:-0.48rem;"></a>
+    <div id="section5_5" class="footer1"></div>
 
     <div class="affix flex-center">
       <el-button
@@ -258,7 +262,7 @@ export default {
     //锚点跳转  vue和<a>标签冲突使用此方法解决
     const goAnchor = (selector) => {
       document.querySelector(selector).scrollIntoView({
-        behavior: "smooth",
+        behavior: "smooth"
       });
     };
     const clickMenuHandle = (item) => {
@@ -373,6 +377,12 @@ export default {
 }
 .main_heard {
   height: 0.48rem;
+  position: fixed;
+  top:0;
+  left:0;
+  background: white;
+  width: 100vw;
+  z-index: 9;
 }
 .el-row {
   height: 0.48rem;
@@ -418,6 +428,7 @@ export default {
   cursor: pointer;
 }
 .container {
+  margin-top:0.45rem;
   overflow-x: hidden;
 }
 .container_img1 {
