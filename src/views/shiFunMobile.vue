@@ -341,13 +341,16 @@ export default {
     };
 
     onMounted(() => {
+      const scrollTop = 48*(document.documentElement.clientWidth / 375);
+
       let scene1 = gsap.timeline();
       gsap.utils.toArray(".container_panel").forEach((panel, i) => {
         ScrollTrigger.create({
           animation: scene1,
           trigger: panel,
-          start: "top top",
+          start: "top "+scrollTop+'px',
           end: "+=300",
+          markers:true,
           pin: true,
           pinSpacing: false,
         });
@@ -415,7 +418,7 @@ export default {
   left:0;
   background: white;
   width: 100vw;
-  z-index: 9;
+  z-index: 11;
 }
 .el-row {
   height: 0.48rem;
