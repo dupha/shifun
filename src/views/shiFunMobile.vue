@@ -132,8 +132,7 @@ export default {
   },
   setup() {
     const { _H5Adaptation } = VueMixin(); //解构
-    _H5Adaptation(); //rem   root fontSize 适配设计稿 375
-
+    _H5Adaptation(); //rem   root fontSize 适配设计稿 375    
     const state = reactive({
       show: false,
       drawer: false,
@@ -353,6 +352,42 @@ export default {
           pinSpacing: false,
         });
       });
+
+      gsap.from(".container_img6", {
+        scale:0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".container_img6",
+          toggleActions: 'restart pause reverse pause',
+          scrub:true,
+          start:"top 80%",
+          end: "+=300",
+        },
+      });
+
+      gsap.from(".container_img7", {
+        scale:0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".container_img7",
+          toggleActions: 'restart pause reverse pause',
+          scrub:true,
+          start:"top 80%",
+          end: "+=300",
+        },
+      });
+
+      gsap.from(".container_img8", {
+        scale:0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".container_img8",
+          toggleActions: 'restart pause reverse pause',
+          scrub:true,
+          start:"top 80%",
+          end: "+=300",
+        },
+      });
     });
 
     return {
@@ -370,8 +405,8 @@ export default {
 </script>
 <style scoped>
 .main {
-  height: 100vh;
   width: 100vw;
+  overflow-y: scroll;
 }
 .main_heard {
   height: 0.48rem;
