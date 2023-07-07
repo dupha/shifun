@@ -54,7 +54,7 @@
     <div class="affix flex-center">
       <el-button
         type="primary"
-        @click="clickMenuHandle({ section: 'main_heard' })"
+        @click="clickMenuHandle({ section: 'section0' })"
         plain
         style="height: 0.4rem;font-size: 0.18rem;"
         >返回顶部</el-button
